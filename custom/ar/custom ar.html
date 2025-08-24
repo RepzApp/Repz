@@ -1,0 +1,3207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشئ التمارين المخصصة</title>
+    <link rel="icon" type="image/x-icon" href="../icons/icon.ico">
+    <link rel="icon" type="image/ico" sizes="32x32" href="../icons/resized-icon-32x32.ico">
+    <link rel="icon" type="image/ico" sizes="16x16" href="../icons/resized-icon-16x16.ico">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --phosphor-blue: #00f0ff;
+            --phosphor-green: #00ff9d;
+            --phosphor-pink: #ff00aa;
+            --phosphor-purple: #b700ff;
+            --phosphor-yellow: #ffee00;
+            --light: #f1f5f9;
+            --dark: #020617;
+            --exercise-note-color: #ff9d00;
+            --day-separator-color: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--primary);
+            color: var(--light);
+            min-height: 100vh;
+            text-align: right;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--phosphor-blue);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        .motto {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .motto span.no-gain {
+            color: var(--phosphor-blue);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
+        }
+
+        .motto span.pain {
+            color: var(--phosphor-yellow);
+            animation: electric-pain 1.5s infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+
+        @keyframes electric-pain {
+            0% {
+                text-shadow: 0 0 5px var(--phosphor-yellow),
+                    0 0 10px var(--phosphor-yellow),
+                    0 0 15px var(--phosphor-yellow),
+                    0 0 20px var(--phosphor-pink);
+                transform: scale(1);
+            }
+
+            20% {
+                text-shadow: 0 0 2px var(--phosphor-yellow),
+                    0 0 5px var(--phosphor-yellow),
+                    0 0 7px var(--phosphor-yellow),
+                    0 0 10px var(--phosphor-pink);
+                transform: scale(1.02);
+            }
+
+            40% {
+                text-shadow: 0 0 10px var(--phosphor-yellow),
+                    0 0 20px var(--phosphor-yellow),
+                    0 0 30px var(--phosphor-yellow),
+                    0 0 40px var(--phosphor-pink);
+                transform: scale(1.05);
+            }
+
+            60% {
+                text-shadow: 0 0 5px var(--phosphor-yellow),
+                    0 0 15px var(--phosphor-yellow),
+                    0 0 25px var(--phosphor-yellow),
+                    0 0 35px var(--phosphor-pink);
+                transform: scale(1.03);
+            }
+
+            80% {
+                text-shadow: 0 0 8px var(--phosphor-yellow),
+                    0 0 18px var(--phosphor-yellow),
+                    0 0 28px var(--phosphor-yellow),
+                    0 0 38px var(--phosphor-pink);
+                transform: scale(1.07);
+            }
+
+            100% {
+                text-shadow: 0 0 10px var(--phosphor-yellow),
+                    0 0 25px var(--phosphor-yellow),
+                    0 0 40px var(--phosphor-yellow),
+                    0 0 50px var(--phosphor-pink);
+                transform: scale(1.1);
+            }
+        }
+
+        .workout-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .workout-card {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .workout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: var(--phosphor-blue);
+        }
+
+        .workout-card h3 {
+            color: var(--phosphor-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .workout-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .workout-actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 1rem;
+        }
+
+        .workout-action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .delete-btn {
+            background: var(--phosphor-pink);
+            color: var(--dark);
+        }
+
+        .delete-btn:hover {
+            background: #e6008a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 10px rgba(255, 0, 170, 0.5);
+        }
+
+        .add-workout-btn {
+            background: var(--phosphor-blue);
+            color: var(--dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .add-workout-btn:hover {
+            background: #00d9e6;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--secondary);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--phosphor-blue);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--phosphor-blue);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--phosphor-pink);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--phosphor-green);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: var(--primary);
+            color: var(--light);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--phosphor-blue);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 0.75rem center;
+            background-size: 16px 12px;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+            margin-left: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--phosphor-green);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: #00e68a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--phosphor-blue);
+            border: 2px solid var(--phosphor-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        /* Exercise Modal */
+        .exercise-modal .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-modal .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .single-arm-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .single-arm-option input {
+            margin-left: 0.5rem;
+        }
+
+        .exercise-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+
+        .exercise-item {
+            background: rgba(0, 240, 255, 0.05);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-right: 3px solid var(--phosphor-blue);
+            border-left: none;
+        }
+
+        .exercise-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .exercise-item h4 {
+            color: var(--phosphor-blue);
+            margin-bottom: 0.3rem;
+        }
+
+        .exercise-item p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+
+        .remove-exercise {
+            color: var(--phosphor-pink);
+            background: none;
+            border: none;
+            cursor: pointer;
+            float: left;
+            font-weight: bold;
+        }
+
+        /* Workout View Page */
+        .workout-view {
+            background: var(--secondary);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .day-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--day-separator-color);
+        }
+
+        .day-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .day-title {
+            color: var(--phosphor-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exercise-view {
+            background: rgba(0, 240, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-right: 3px solid var(--phosphor-green);
+            border-left: none;
+        }
+
+        .exercise-view h4 {
+            color: var(--phosphor-green);
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .exercise-view h4:hover {
+            color: var(--phosphor-blue);
+        }
+
+        .exercise-view p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .back-btn {
+            background: var(--phosphor-blue);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .back-btn:hover {
+            background: #00d9e6;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--phosphor-green);
+            color: var(--dark);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            transform: translateX(-200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--phosphor-pink);
+        }
+
+        /* Input fields for workout tracking */
+        .input-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 0.3rem;
+        }
+
+        .input-group input {
+            background: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--light);
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--phosphor-blue);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
+        }
+
+        .set-separator {
+            height: 2px;
+            background-color: var(--phosphor-pink);
+            margin: 1.5rem 0;
+            opacity: 0.3;
+            box-shadow: 0 0 5px rgba(183, 0, 255, 1);
+        }
+
+        /* Notes section */
+        .notes-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .notes-section h3 {
+            color: var(--phosphor-purple);
+            margin-bottom: 1rem;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border-radius: 8px;
+            background: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--light);
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 1rem;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--phosphor-purple);
+            box-shadow: 0 0 0 2px rgba(183, 0, 255, 0.2);
+        }
+
+        .saved-notes {
+            background: rgba(183, 0, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            border-right: 3px solid var(--phosphor-purple);
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            margin-top: 1rem;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .save-btn {
+            background: var(--phosphor-green);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+        }
+
+        .save-btn:hover {
+            background: #00e68a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+        }
+
+        .reset-btn {
+            background: var(--phosphor-pink);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 170, 0.3);
+        }
+
+        .reset-btn:hover {
+            background: #e6008a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 0, 170, 0.5);
+        }
+
+        .record-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 8px;
+            border-right: 3px solid var(--phosphor-yellow);
+        }
+
+        .record-section h3 {
+            color: var(--phosphor-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .record-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .record-date {
+            color: var(--phosphor-blue);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .record-data {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .record-notes {
+            color: var(--phosphor-purple);
+            font-style: italic;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        /* Last Record Display */
+        .last-record {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-right: 3px solid var(--phosphor-purple);
+        }
+
+        .last-record h5 {
+            color: var(--phosphor-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .last-record p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .last-record-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+
+        .last-record-table th {
+            text-align: right;
+            padding: 0.5rem;
+            color: var(--phosphor-blue);
+            font-size: 0.8rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .last-record-table td {
+            padding: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .last-record-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Date Box */
+        .date-box {
+            background: var(--phosphor-blue);
+            color: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Exercise Records Modal */
+        .exercise-records-modal .modal-content {
+            max-width: 800px;
+        }
+
+        .exercise-records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .exercise-records-table th {
+            text-align: right;
+            padding: 0.75rem;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--phosphor-blue);
+            font-size: 0.9rem;
+        }
+
+        .exercise-records-table td {
+            padding: 0.75rem;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .exercise-records-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Exercise Notes */
+        .exercise-notes {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(148, 163, 184, 0.2);
+        }
+
+        .exercise-notes h5 {
+            color: var(--exercise-note-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-notes textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: var(--primary);
+            border: 1px solid rgba(255, 157, 0, 0.3);
+            color: var(--light);
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-notes textarea:focus {
+            outline: none;
+            border-color: var(--exercise-note-color);
+            box-shadow: 0 0 0 2px rgba(255, 157, 0, 0.2);
+        }
+
+        .saved-exercise-notes {
+            color: var(--exercise-note-color);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Serial Info */
+        .serial-info {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-right: 3px solid var(--phosphor-yellow);
+        }
+
+        .serial-info h3 {
+            color: var(--phosphor-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .serial-info p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .serial-expiry {
+            font-weight: bold;
+            color: var(--phosphor-green);
+        }
+
+        .serial-expiry.warning {
+            color: var(--phosphor-yellow);
+        }
+
+        .serial-expiry.expired {
+            color: var(--phosphor-pink);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Price List Styles */
+        .price-list {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 8px;
+            border-right: 3px solid var(--phosphor-purple);
+        }
+
+        .price-list h4 {
+            color: var(--phosphor-purple);
+            margin-bottom: 1rem;
+            text-align: center;
+            direction: rtl;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+        }
+
+        .price-item:last-child {
+            border-bottom: none;
+        }
+
+        .price-duration {
+            color: var(--phosphor-blue);
+        }
+
+        .price-amount {
+            color: var(--phosphor-green);
+            font-weight: bold;
+        }
+
+        .contact-support {
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: rgba(255, 0, 170, 0.05);
+            border-radius: 8px;
+            border-right: 3px solid var(--phosphor-pink);
+        }
+
+        .contact-support p {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .support-link {
+            display: inline-block;
+            background: var(--phosphor-pink);
+            color: var(--dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .support-link:hover {
+            background: #e6008a;
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 0, 170, 0.5);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .workout-list {
+                grid-template-columns: 1fr;
+            }
+
+            .exercise-modal .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .last-record-table,
+            .exercise-records-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        /* Thunder and Fire Theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                    rgba(0, 0, 0, 0.9) 0%,
+                    rgba(15, 23, 42, 0.8) 20%,
+                    rgba(0, 0, 0, 0.9) 100%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Thunder effect container - reduced intensity */
+        .thunder-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            /* Reduce rendering load */
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
+        }
+
+        /* Lightning effect - reduced frequency and simplified */
+        .lightning {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15); /* Reduced opacity */
+            opacity: 0;
+            z-index: 1;
+            /* Optimize for performance */
+            will-change: opacity;
+        }
+
+        /* Thunder animation - simplified */
+        @keyframes thunder {
+            0%, 100% {
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.4; /* Reduced intensity */
+            }
+            6% {
+                opacity: 0;
+            }
+        }
+
+        /* Fire effect - simplified with reduced animation */
+        .fire-effect {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px; /* Reduced height */
+            background: linear-gradient(to top,
+                    rgba(255, 80, 0, 0.4) 0%, /* Reduced opacity */
+                    rgba(255, 200, 0, 0.2) 50%, /* Reduced opacity */
+                    transparent 100%);
+            z-index: -1;
+            pointer-events: none;
+            /* Remove flicker animation to reduce CPU load */
+            opacity: 0.6; /* Set constant opacity */
+            /* Optimize for performance */
+            transform: translateZ(0);
+            will-change: opacity;
+        }
+
+        /* Fire particles - reduced quantity and simplified */
+        .fire-particle {
+            position: absolute;
+            bottom: 0;
+            background: radial-gradient(circle,
+                    rgba(255, 200, 0, 0.4) 0%, /* Reduced opacity */
+                    rgba(255, 80, 0, 0.3) 50%, /* Reduced opacity */
+                    transparent 100%);
+            border-radius: 50%;
+            filter: blur(3px); /* Reduced blur */
+            animation: rise linear forwards;
+            pointer-events: none;
+            /* Optimize for performance */
+            will-change: transform, opacity;
+        }
+
+        /* Particle rise animation - simplified */
+        @keyframes rise {
+            to {
+                transform: translateY(-40vh); /* Reduced travel distance */
+                opacity: 0;
+            }
+        }
+
+        /* Further reduce animations on mobile devices */
+        @media (max-width: 768px) {
+            .fire-effect {
+                height: 70px; /* Even smaller on mobile */
+                opacity: 0.5;
+            }
+            
+            .fire-particle {
+                display: none; /* Remove particles completely on mobile */
+            }
+            
+            .thunder-container {
+                display: none; /* Remove thunder completely on mobile */
+            }
+        }
+
+        .change-serial-btn {
+            background: var(--phosphor-purple);
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .change-serial-btn:hover {
+            background: #a500e6;
+            transform: translateY(-2px);
+            box-shadow: 0 0 10px rgba(183, 0, 255, 0.5);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--phosphor-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .loading-content {
+            background-color: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--phosphor-blue);
+        }
+
+        .loading-spinner {
+            border: 5px solid rgba(0, 240, 255, 0.2);
+            border-top: 5px solid var(--phosphor-blue);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        .loading-text {
+            color: var(--phosphor-blue);
+            font-weight: bold;
+        }
+
+        /* Day navigation */
+        .day-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+        .day-nav-btn {
+            background: var(--secondary);
+            color: var(--phosphor-blue);
+            border: 1px solid var(--phosphor-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .day-nav-btn.active {
+            background: var(--phosphor-blue);
+            color: var(--dark);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .day-nav-btn:hover {
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .copyright {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            font-size: 0.8rem;
+            z-index: 100;
+        }
+
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            /* right: 20px; */
+            display: flex;
+            gap: 10px;
+            flex-direction: row-reverse;
+            /* Reverses order for RTL */
+        }
+
+        .back-button,
+        .home-button {
+            background: var(--secondary);
+            color: var(--phosphor-blue);
+            border: 1px solid var(--phosphor-blue);
+            border-radius: 50px;
+            padding: 0;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .back-button:hover,
+        .home-button:hover {
+            background: var(--phosphor-blue);
+            color: var(--dark);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .home-button i {
+            font-size: 1.2rem;
+        }
+
+        .discount-badge {
+            background: var(--phosphor-pink);
+            color: var(--dark);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            direction: ltr;
+        }
+
+        .original-price {
+            color: #94a3b8;
+            text-decoration: line-through;
+            font-size: 0.8rem;
+        }/* Help Button Styles */
+.help-btn {
+    background-color: var(--phosphor-yellow);
+    color: var(--dark);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(255, 238, 0, 0.6);
+    transition: all 0.3s ease;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.help-btn:hover {
+    background-color: var(--phosphor-green);
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 0 25px rgba(0, 255, 157, 0.7);
+}
+
+.help-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive design for mobile */
+@media (max-width: 600px) {
+    .help-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="thunder-container"></div>
+    <div class="fire-effect"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loading-text">جارٍ التحقق من السيريال...</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Help Button -->
+<button class="help-btn" id="helpBtn">
+    <i class="fas fa-question"></i>
+</button>
+        <header>
+            <div class="header-buttons">
+                <button class="home-button" onclick="window.location.href='../../../Language/index.html'">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="back-button" onclick="window.history.back()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="motto">
+                <span class="no-gain">لا </span>
+                <span class="pain">ألم </span>
+                <span class="pain"> لا</span>
+                <span class="no-gain"> مكسب</span>
+            </div>
+            <h1 class="glow">تمارين مخصصة</h1>
+            <p>أنشئ وادع خطط التمارين الخاصة بك</p>
+        </header>
+
+        <div id="home-page">
+            <div class="serial-info" id="serial-info" style="display: none;">
+                <h3>معلومات السيريال</h3>
+                <p>السيريال الحالي: <span id="current-serial"></span></p>
+                <p>الحالة: <span id="serial-status"></span></p>
+                <p>ينتهي خلال: <span id="serial-expiry" class="serial-expiry"></span></p>
+                <button class="btn change-serial-btn" id="change-serial-btn">تغيير السيريال</button>
+            </div>
+
+            <div class="workout-list" id="workout-list">
+                <!-- Workout cards will be dynamically added here -->
+            </div>
+
+            <button class="add-workout-btn" id="add-workout-btn">+ إنشاء تمرين جديد</button>
+        </div>
+
+        <div id="workout-view-page" style="display: none;">
+            <div class="workout-view" id="workout-view-content">
+                <!-- Workout details will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Workout Creation Modal -->
+    <div class="modal" id="workout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">إنشاء تمرين جديد</h3>
+                <button class="close-modal" onclick="closeModal('workout-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="workout-name">اسم التمرين</label>
+                    <input type="text" id="workout-name" class="form-control" placeholder="مثال: دفع A, سحب B, إلخ.">
+                </div>
+                <div class="form-group">
+                    <label for="workout-days">عدد الأيام</label>
+                    <select id="workout-days" class="form-control">
+                        <option value="1">يوم واحد</option>
+                        <option value="2">يومان</option>
+                        <option value="3">3 أيام</option>
+                        <option value="4">4 أيام</option>
+                        <option value="5">5 أيام</option>
+                        <option value="6">6 أيام</option>
+                        <option value="7">7 أيام</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('workout-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="create-workout-btn">إنشاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercise Creation Modal -->
+    <div class="modal" id="exercise-modal">
+        <div class="modal-content exercise-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exercise-modal-title">إضافة تمارين لليوم 1</h3>
+                <button class="close-modal" onclick="closeModal('exercise-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="day-name">اسم اليوم</label>
+                    <input type="text" id="day-name" class="form-control" placeholder="مثال: صدر, ظهر, أرجل, إلخ.">
+                </div>
+                <div class="form-group">
+                    <label for="exercise-count">عدد التمارين (15 كحد أقصى)</label>
+                    <select id="exercise-count" class="form-control">
+                        <option value="1">تمرين واحد</option>
+                        <option value="2">تمرينان</option>
+                        <option value="3">3 تمارين</option>
+                        <option value="4">4 تمارين</option>
+                        <option value="5">5 تمارين</option>
+                        <option value="6">6 تمارين</option>
+                        <option value="7">7 تمارين</option>
+                        <option value="8">8 تمارين</option>
+                        <option value="9">9 تمارين</option>
+                        <option value="10">10 تمارين</option>
+                        <option value="11">11 تمرين</option>
+                        <option value="12">12 تمرين</option>
+                        <option value="13">13 تمرين</option>
+                        <option value="14">14 تمرين</option>
+                        <option value="15">15 تمرين</option>
+                    </select>
+                </div>
+
+                <div id="exercise-fields-container">
+                    <!-- Exercise fields will be dynamically added here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('exercise-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="save-exercises-btn">حفظ التمارين</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Serial Number Modal (First Time) -->
+    <div class="modal" id="serial-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">أدخل رقم السيريال</h3>
+                <button class="close-modal" onclick="closeModal('serial-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="serial-number">رقم السيريال</label>
+                    <input type="text" id="serial-number" class="form-control"
+                        placeholder="أدخل السيريال (xxx-xxx-xxx-xxx-xxx-xxx-xx)"
+                        pattern="[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{2}"
+                        title="التنسيق: xxx-xxx-xxx-xxx-xxx-xxx-xx">
+                </div>
+
+                <div class="contact-support">
+                    <p>إذا لم يكن لديك سيريال، يرجى التواصل مع خدمة العملاء</p>
+                    <a href="../../../Language/index.html" class="support-link">خدمة العملاء</a>
+                </div>
+
+                <div class="price-list">
+                    <h4>قائمة الأسعار <span class="discount-badge">عرض خاص!</span></h4>
+                    <div class="price-item">
+                        <span class="price-duration">أسبوع واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">3 دولار</span>
+                            <span class="price-amount">1 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">شهر واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">5 دولار</span>
+                            <span class="price-amount">2 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">3 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">6 دولار</span>
+                            <span class="price-amount">4 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">6 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">8 دولار</span>
+                            <span class="price-amount">6 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">سنة واحدة:</span>
+                        <div class="price-container">
+                            <span class="original-price">12 دولار</span>
+                            <span class="price-amount">10 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">دائم:</span>
+                        <div class="price-container">
+                            <span class="original-price">20 دولار</span>
+                            <span class="price-amount">15 دولار</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('serial-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="verify-serial-btn">تحقق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Serial Expired Modal (Renewal) -->
+    <div class="modal" id="serial-expired-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">انتهت صلاحية السيريال</h3>
+                <button class="close-modal" onclick="closeModal('serial-expired-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>انتهت صلاحية سيريالك. لمواصلة استخدام التطبيق، يرجى إدخال سيريال جديد.</p>
+                <div class="form-group">
+                    <label for="expired-serial-number">رقم السيريال الجديد</label>
+                    <input type="text" id="expired-serial-number" class="form-control"
+                        placeholder="أدخل رقم سيريال جديد">
+                </div>
+
+                <div class="contact-support">
+                    <p>إذا لم يكن لديك سيريال، يرجى التواصل مع خدمة العملاء</p>
+                    <a href="../../../Language/index.html" class="support-link">خدمة العملاء</a>
+                </div>
+
+                <div class="price-list">
+                    <h4>قائمة الأسعار <span class="discount-badge">عرض خاص!</span></h4>
+                    <div class="price-item">
+                        <span class="price-duration">أسبوع واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">3 دولار</span>
+                            <span class="price-amount">1 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">شهر واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">5 دولار</span>
+                            <span class="price-amount">2 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">3 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">6 دولار</span>
+                            <span class="price-amount">4 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">6 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">8 دولار</span>
+                            <span class="price-amount">6 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">سنة واحدة:</span>
+                        <div class="price-container">
+                            <span class="original-price">12 دولار</span>
+                            <span class="price-amount">10 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">دائم:</span>
+                        <div class="price-container">
+                            <span class="original-price">20 دولار</span>
+                            <span class="price-amount">15 دولار</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('serial-expired-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="save-expired-serial-btn">حفظ السيريال الجديد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Serial Modal -->
+    <div class="modal" id="change-serial-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">تغيير السيريال</h3>
+                <button class="close-modal" onclick="closeModal('change-serial-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="change-serial-number">رقم السيريال الجديد</label>
+                    <input type="text" id="change-serial-number" class="form-control"
+                        placeholder="أدخل رقم سيريال جديد">
+                </div>
+
+                <div class="contact-support">
+                    <p>إذا لم يكن لديك سيريال، يرجى التواصل مع خدمة العملاء</p>
+                    <a href="../../../Language/index.html" class="support-link">خدمة العملاء</a>
+                </div>
+
+                <div class="price-list">
+                    <h4>قائمة الأسعار <span class="discount-badge">عرض خاص!</span></h4>
+                    <div class="price-item">
+                        <span class="price-duration">أسبوع واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">3 دولار</span>
+                            <span class="price-amount">1 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">شهر واحد:</span>
+                        <div class="price-container">
+                            <span class="original-price">5 دولار</span>
+                            <span class="price-amount">2 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">3 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">6 دولار</span>
+                            <span class="price-amount">4 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">6 أشهر:</span>
+                        <div class="price-container">
+                            <span class="original-price">8 دولار</span>
+                            <span class="price-amount">6 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">سنة واحدة:</span>
+                        <div class="price-container">
+                            <span class="original-price">12 دولار</span>
+                            <span class="price-amount">10 دولار</span>
+                        </div>
+                    </div>
+                    <div class="price-item">
+                        <span class="price-duration">دائم:</span>
+                        <div class="price-container">
+                            <span class="original-price">20 دولار</span>
+                            <span class="price-amount">15 دولار</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('change-serial-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="save-change-serial-btn">حفظ السيريال الجديد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercise Records Modal -->
+    <div class="modal" id="exercise-records-modal">
+        <div class="modal-content exercise-records-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exercise-records-title">سجل التمارين</h3>
+                <button class="close-modal" onclick="closeModal('exercise-records-modal')">&times;</button>
+            </div>
+            <div class="modal-body" id="exercise-records-body">
+                <!-- Exercise records will be dynamically added here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('exercise-records-modal')">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">تأكيد الحذف</h3>
+                <button class="close-modal" onclick="closeModal('delete-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد أنك تريد حذف هذا التمرين؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('delete-modal')">إلغاء</button>
+                <button class="btn btn-primary" id="confirm-delete-btn">حذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    <div class="copyright" dir="ltr">
+        &copy; 2025 ENG Ahmed Saber. جميع الحقوق محفوظة.
+    </div>
+
+    <script>
+        // GitHub API Configuration
+        const GITHUB_CONFIG = {
+            REPO_OWNER: 'AhmedSaber45',
+            REPO_NAME: 'workout-serials',
+            BRANCH: 'main',
+            SERIALS_FILE: 'serials.json',
+            TOKEN: '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',
+            PROGRAM_ID: '11' // The ID for this specific program
+        };
+
+        // DOM Elements
+        const homePage = document.getElementById('home-page');
+        const workoutViewPage = document.getElementById('workout-view-page');
+        const workoutList = document.getElementById('workout-list');
+        const workoutViewContent = document.getElementById('workout-view-content');
+        const addWorkoutBtn = document.getElementById('add-workout-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+
+        // Serial info elements
+        const serialInfo = document.getElementById('serial-info');
+        const currentSerialSpan = document.getElementById('current-serial');
+        const serialStatusSpan = document.getElementById('serial-status');
+        const serialExpirySpan = document.getElementById('serial-expiry');
+
+        // Modal elements
+        const workoutModal = document.getElementById('workout-modal');
+        const exerciseModal = document.getElementById('exercise-modal');
+        const serialModal = document.getElementById('serial-modal');
+        const serialExpiredModal = document.getElementById('serial-expired-modal');
+        const changeSerialModal = document.getElementById('change-serial-modal');
+        const exerciseRecordsModal = document.getElementById('exercise-records-modal');
+        const deleteModal = document.getElementById('delete-modal');
+        const createWorkoutBtn = document.getElementById('create-workout-btn');
+        const saveExercisesBtn = document.getElementById('save-exercises-btn');
+        const verifySerialBtn = document.getElementById('verify-serial-btn');
+        const saveExpiredSerialBtn = document.getElementById('save-expired-serial-btn');
+        const saveChangeSerialBtn = document.getElementById('save-change-serial-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+        // Workout creation elements
+        const workoutNameInput = document.getElementById('workout-name');
+        const workoutDaysSelect = document.getElementById('workout-days');
+        const serialNumberInput = document.getElementById('serial-number');
+        const expiredSerialNumberInput = document.getElementById('expired-serial-number');
+        const changeSerialNumberInput = document.getElementById('change-serial-number');
+
+        // Exercise creation elements
+        const exerciseModalTitle = document.getElementById('exercise-modal-title');
+        const exerciseRecordsTitle = document.getElementById('exercise-records-title');
+        const exerciseRecordsBody = document.getElementById('exercise-records-body');
+        const dayNameInput = document.getElementById('day-name');
+        const exerciseCountSelect = document.getElementById('exercise-count');
+        const exerciseFieldsContainer = document.getElementById('exercise-fields-container');
+
+        // Notification element
+        const notification = document.getElementById('notification');
+
+        // State variables
+        let currentWorkout = null;
+        let currentWorkoutIndex = -1;
+        let currentDay = 1;
+        let totalDays = 0;
+        let workoutData = {};
+        let createdWorkouts = JSON.parse(localStorage.getItem('customWorkouts')) || [];
+        let workoutRecords = JSON.parse(localStorage.getItem('workoutRecords')) || {};
+        let serialInfoData = JSON.parse(localStorage.getItem('serialInfo')) || null;
+        let isEditing = false;
+        let workoutToDeleteIndex = -1;
+        let currentViewingDay = 1;
+
+        // Function to check if serial is still valid in the GitHub file
+        async function checkSerialInGitHub(serial) {
+            try {
+                const serials = await fetchSerialsFromGitHub();
+                const foundSerial = serials.find(s => s.serial === serial && s.programId === GITHUB_CONFIG.PROGRAM_ID);
+
+                if (!foundSerial) {
+                    return { valid: false, reason: 'Serial not found in database' };
+                }
+
+                if (foundSerial.revoked) {
+                    return { valid: false, reason: 'Serial has been revoked' };
+                }
+
+                return { valid: true, serialData: foundSerial };
+            } catch (error) {
+                console.error('Error checking serial in GitHub:', error);
+                return { valid: false, reason: 'Error checking serial' };
+            }
+        }
+
+        // Function to check serial validity (both locally and on GitHub)
+        async function validateSerial() {
+            if (!serialInfoData) {
+                return { valid: false, reason: 'No serial found' };
+            }
+
+            // First check local expiration
+            if (serialInfoData.duration !== 'permanent') {
+                const now = new Date();
+                const expiryDate = new Date(serialInfoData.expiryDate);
+
+                if (now > expiryDate) {
+                    return { valid: false, reason: 'Serial expired' };
+                }
+            }
+
+            // Then check with GitHub
+            const githubCheck = await checkSerialInGitHub(serialInfoData.serial);
+            if (!githubCheck.valid) {
+                return githubCheck;
+            }
+
+            return { valid: true };
+        }
+
+        // Function to enforce serial validation
+        async function enforceSerialValidation() {
+            const validation = await validateSerial();
+
+            if (!validation.valid) {
+                // Show appropriate message based on reason
+                let message = 'فشل التحقق من السيريال';
+                if (validation.reason === 'Serial expired') {
+                    message = 'انتهت صلاحية السيريال. يرجى إدخال سيريال جديد.';
+                } else if (validation.reason === 'Serial not found in database') {
+                    message = 'لم يتم العثور على السيريال في نظامنا. يرجى إدخال سيريال صالح.';
+                } else if (validation.reason === 'Serial has been revoked') {
+                    message = 'تم إلغاء هذا السيريال. يرجى التواصل مع الدعم.';
+                }
+
+                showNotification(message, true);
+                openModal('serial-expired-modal');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Function to run on page load and periodically
+        async function checkSerialAndEnforce() {
+            // If no serial exists, show the serial modal
+            if (!serialInfoData) {
+                openModal('serial-modal');
+                return;
+            }
+
+            // Check serial validity
+            const isValid = await enforceSerialValidation();
+
+            if (!isValid) {
+                // Disable all functionality until valid serial is entered
+                document.getElementById('add-workout-btn').disabled = true;
+                document.querySelectorAll('.workout-card').forEach(card => {
+                    card.style.opacity = '0.5';
+                    card.style.pointerEvents = 'none';
+                });
+            } else {
+                // Enable functionality
+                document.getElementById('add-workout-btn').disabled = false;
+                document.querySelectorAll('.workout-card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.pointerEvents = 'auto';
+                });
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            renderWorkoutList();
+            createFireAndThunderEffects();
+            checkSerialStatus();
+
+            // Event listeners
+            document.getElementById('change-serial-btn').addEventListener('click', function () {
+                document.getElementById('change-serial-number').value = '';
+                openModal('change-serial-modal');
+            });
+            addWorkoutBtn.addEventListener('click', handleAddWorkout);
+            createWorkoutBtn.addEventListener('click', startWorkoutCreation);
+            saveExercisesBtn.addEventListener('click', saveExercises);
+            exerciseCountSelect.addEventListener('change', function () {
+                const count = parseInt(this.value);
+                addExerciseFields(count);
+            });
+            verifySerialBtn.addEventListener('click', verifySerialNumber);
+            saveExpiredSerialBtn.addEventListener('click', saveExpiredSerialNumber);
+            saveChangeSerialBtn.addEventListener('click', saveChangeSerialNumber);
+            confirmDeleteBtn.addEventListener('click', confirmDeleteWorkout);
+
+            // Check if we need to ask for serial on first load
+            if (!serialInfoData && createdWorkouts.length === 0) {
+                openModal('serial-modal');
+            }
+            checkSerialAndEnforce();
+
+            // Also check periodically (every 6 hours)
+            setInterval(checkSerialAndEnforce, 6 * 60 * 60 * 1000);
+        });
+
+        // Create fire and thunder effects
+        function createFireAndThunderEffects() {
+            // Create thunder container
+            const thunderContainer = document.querySelector('.thunder-container');
+
+            // Create fire effect
+            const fireEffect = document.querySelector('.fire-effect');
+
+            // Generate random lightning
+            function createLightning() {
+                const lightning = document.createElement('div');
+                lightning.className = 'lightning';
+                thunderContainer.appendChild(lightning);
+
+                const delay = Math.random() * 15000 + 5000;
+
+                setTimeout(() => {
+                    lightning.style.opacity = '0';
+                    lightning.style.animation = 'thunder 0.5s linear';
+
+                    setTimeout(() => {
+                        lightning.remove();
+                    }, 500);
+
+                    createLightning();
+                }, delay);
+            }
+
+            // Create initial lightning
+            createLightning();
+
+            // Create fire particles
+            function createFireParticles() {
+                const particle = document.createElement('div');
+                particle.className = 'fire-particle';
+
+                const size = Math.random() * 30 + 10;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                particle.style.left = `${Math.random() * 100}%`;
+
+                const duration = Math.random() * 5 + 3;
+                particle.style.animationDuration = `${duration}s`;
+
+                fireEffect.appendChild(particle);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, duration * 1000);
+            }
+
+            // Create fire particles periodically
+            setInterval(createFireParticles, 100);
+
+            // Create initial batch of particles
+            for (let i = 0; i < 20; i++) {
+                setTimeout(createFireParticles, i * 100);
+            }
+        }
+
+        function checkSerialStatus() {
+            if (!serialInfoData) {
+                serialInfo.style.display = 'none';
+                return;
+            }
+
+            const now = new Date();
+            let expiryDate;
+
+            if (serialInfoData.expiryDate === 'permanent') {
+                expiryDate = 'permanent';
+            } else {
+                expiryDate = new Date(serialInfoData.expiryDate);
+            }
+
+            currentSerialSpan.textContent = serialInfoData.serial;
+
+            // Add device info
+            const deviceInfo = document.createElement('p');
+            deviceInfo.textContent = `الجهاز: ${serialInfoData.deviceId || 'غير معروف'}`;
+            deviceInfo.style.color = '#94a3b8';
+            deviceInfo.style.fontSize = '0.9rem';
+            deviceInfo.style.marginTop = '0.5rem';
+
+            if (serialInfoData.duration === 'permanent') {
+                serialStatusSpan.textContent = 'نشط (دائم)';
+                serialExpirySpan.textContent = 'لا ينتهي';
+                serialExpirySpan.className = 'serial-expiry';
+            } else if (now > expiryDate) {
+                serialStatusSpan.textContent = 'منتهي الصلاحية';
+                serialExpirySpan.textContent = 'منتهي';
+                serialExpirySpan.className = 'serial-expiry expired';
+            } else {
+                const daysRemaining = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                serialStatusSpan.textContent = 'نشط';
+                serialExpirySpan.textContent = `${daysRemaining} يوم${daysRemaining !== 1 ? '' : ''}`;
+
+                if (daysRemaining <= 7) {
+                    serialExpirySpan.className = 'serial-expiry warning';
+                } else {
+                    serialExpirySpan.className = 'serial-expiry';
+                }
+            }
+
+            // Add device info to serial info display
+            if (!document.getElementById('device-info')) {
+                const deviceInfoElement = document.createElement('p');
+                deviceInfoElement.id = 'device-info';
+                deviceInfoElement.textContent = `الجهاز: ${serialInfoData.deviceId || 'غير معروف'}`;
+                deviceInfoElement.style.color = '#94a3b8';
+                deviceInfoElement.style.fontSize = '0.9rem';
+                deviceInfoElement.style.marginTop = '0.5rem';
+                serialInfo.appendChild(deviceInfoElement);
+            } else {
+                document.getElementById('device-info').textContent = `الجهاز: ${serialInfoData.deviceId || 'غير معروف'}`;
+            }
+
+            serialInfo.style.display = 'block';
+
+            // If serial is expired, show the expired modal
+            if (expiryDate !== 'permanent' && now > expiryDate) {
+                openModal('serial-expired-modal');
+            }
+        }
+
+        // Check if serial is valid (not expired)
+        function isSerialValid() {
+            if (!serialInfoData) return false;
+
+            // Handle permanent serials
+            if (serialInfoData.duration === 'permanent') return true;
+
+            // Handle time-limited serials
+            const now = new Date();
+            const expiryDate = new Date(serialInfoData.expiryDate);
+            return now <= expiryDate;
+        }
+
+        // Render the list of created workouts
+        function renderWorkoutList() {
+            workoutList.innerHTML = '';
+
+            if (createdWorkouts.length === 0) {
+                workoutList.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #94a3b8;">لا توجد تمارين مخصصة حتى الآن. انقر على "إنشاء تمرين جديد" للبدء.</p>';
+                return;
+            }
+
+            createdWorkouts.forEach((workout, index) => {
+                const workoutCard = document.createElement('div');
+                workoutCard.className = 'workout-card';
+                workoutCard.innerHTML = `
+                    <h3>${workout.name}</h3>
+                    <p>${workout.days} يوم${workout.days > 1 ? '' : ''} • ${getTotalExercises(workout)} تمرين${getTotalExercises(workout) > 1 ? 'ات' : ''}</p>
+                    <div class="workout-actions">
+                        <button class="workout-action-btn delete-btn" data-index="${index}">حذف</button>
+                    </div>
+                `;
+
+                workoutCard.querySelector('.delete-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    workoutToDeleteIndex = index;
+                    openModal('delete-modal');
+                });
+
+                workoutCard.addEventListener('click', () => viewWorkout(index));
+                workoutList.appendChild(workoutCard);
+            });
+        }
+
+        function getTotalExercises(workout) {
+            let total = 0;
+            for (let i = 1; i <= workout.days; i++) {
+                if (workout[`day${i}`] && workout[`day${i}`].exercises) {
+                    total += workout[`day${i}`].exercises.length;
+                }
+            }
+            return total;
+        }
+
+        // Confirm workout deletion
+        function confirmDeleteWorkout() {
+            if (workoutToDeleteIndex === -1) return;
+
+            // Remove the workout
+            createdWorkouts.splice(workoutToDeleteIndex, 1);
+            localStorage.setItem('customWorkouts', JSON.stringify(createdWorkouts));
+
+            // Also remove any records associated with this workout
+            const workoutName = createdWorkouts[workoutToDeleteIndex]?.name;
+            if (workoutName && workoutRecords[workoutName]) {
+                delete workoutRecords[workoutName];
+                localStorage.setItem('workoutRecords', JSON.stringify(workoutRecords));
+            }
+
+            showNotification('تم حذف التمرين بنجاح');
+            closeModal('delete-modal');
+            renderWorkoutList();
+            workoutToDeleteIndex = -1;
+        }
+
+        // Show workout details
+        function viewWorkout(index) {
+            // Check if serial is valid before allowing to view workout
+            if (!isSerialValid()) {
+                openModal('serial-expired-modal');
+                return;
+            }
+
+            currentWorkout = createdWorkouts[index];
+            currentWorkoutIndex = index;
+            currentViewingDay = 1;
+
+            renderWorkoutDay(currentViewingDay);
+            showWorkoutViewPage();
+        }
+
+        // Render a specific day of the workout
+        function renderWorkoutDay(day) {
+            const dayData = currentWorkout[`day${day}`];
+            if (!dayData) return;
+
+            // Add date box at the top
+            const today = new Date();
+            const dateString = today.toLocaleDateString('ar-SA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            workoutViewContent.innerHTML = `
+                <div class="date-box">${dateString}</div>
+                <h2 style="color: var(--phosphor-blue); margin-bottom: 1rem;">${currentWorkout.name}</h2>
+                <p style="color: #94a3b8; margin-bottom: 1rem;">${currentWorkout.days} يوم${currentWorkout.days > 1 ? '' : ''} • ${getTotalExercises(currentWorkout)} تمرين${getTotalExercises(currentWorkout) > 1 ? 'ات' : ''}</p>
+                
+                <!-- Day Navigation -->
+                <div class="day-navigation" id="day-navigation">
+                    ${Array.from({ length: currentWorkout.days }, (_, i) => i + 1)
+                    .map(d => `<button class="day-nav-btn ${d === day ? 'active' : ''}" data-day="${d}">اليوم ${d}</button>`)
+                    .join('')}
+                </div>
+                
+                <h3 class="day-title">اليوم ${day}: ${dayData.dayName}</h3>
+            `;
+
+            // Add exercises
+            dayData.exercises.forEach((exercise, exIndex) => {
+                const exerciseView = document.createElement('div');
+                exerciseView.className = 'exercise-view';
+
+                let setsInfo = '';
+                if (exercise.singleArm) {
+                    setsInfo = `
+                        <p>المجموعات: ${exercise.sets} (ذراع واحد)</p>
+                    `;
+                } else {
+                    setsInfo = `<p>المجموعات: ${exercise.sets}</p>`;
+                }
+
+                exerciseView.innerHTML = `
+                    <h4 class="exercise-name" data-exercise="${exercise.name}">${exIndex + 1}. ${exercise.name}</h4>
+                    ${setsInfo}
+                `;
+
+                // Add last record for this exercise
+                const lastRecord = getLastExerciseRecord(currentWorkout.name, exercise.name, day);
+                if (lastRecord) {
+                    const lastRecordDiv = document.createElement('div');
+                    lastRecordDiv.className = 'last-record';
+
+                    let recordHTML = `
+                        <h5>آخر تسجيل</h5>
+                        <div class="set-separator"></div>
+                        <table class="last-record-table">
+                            <thead>
+                                <tr>
+                                    ${exercise.singleArm ?
+                            '<th>المجموعة</th><th>الوزن</th><th>التكرارات(يمين)</th><th>التكرارات(يسار)</th>' :
+                            '<th>المجموعة</th><th>الوزن</th><th>التكرارات</th><th>العدات المتبقية </th>'}
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    // Add set data
+                    for (let setNum = 1; setNum <= exercise.sets; setNum++) {
+                        const setKey = `ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}`;
+
+                        if (exercise.singleArm) {
+                            const weight = lastRecord.data[`${setKey}-weight`] || '';
+                            const rightReps = lastRecord.data[`${setKey}-right-reps`] || '';
+                            const rightTank = lastRecord.data[`${setKey}-right-tank`] || '';
+                            const leftReps = lastRecord.data[`${setKey}-left-reps`] || '';
+                            const leftTank = lastRecord.data[`${setKey}-left-tank`] || '';
+
+                            recordHTML += `
+                                <tr>
+                                    <td>${setNum}</td>
+                                    <td>${weight}</td>
+                                    <td>${rightReps}${rightTank ? ` (${rightTank})` : ''}</td>
+                                    <td>${leftReps}${leftTank ? ` (${leftTank})` : ''}</td>
+                                </tr>
+                            `;
+                        } else {
+                            const weight = lastRecord.data[`${setKey}-weight`] || '';
+                            const reps = lastRecord.data[`${setKey}-reps`] || '';
+                            const tank = lastRecord.data[`${setKey}-tank`] || '';
+
+                            recordHTML += `
+                                <tr>
+                                    <td>${setNum}</td>
+                                    <td>${weight}</td>
+                                    <td>${reps}</td>
+                                    <td>${tank}</td>
+                                </tr>
+                            `;
+                        }
+                    }
+
+                    recordHTML += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    // Add exercise notes from last record if they exist
+                    const exerciseNotesKey = `ex${currentWorkoutIndex}-day${day}-ex${exIndex}-notes`;
+                    if (lastRecord.data[exerciseNotesKey]) {
+                        recordHTML += `
+                            <div class="exercise-notes">
+                                <h5>ملاحظات</h5>
+                                <p class="saved-exercise-notes">${lastRecord.data[exerciseNotesKey]}</p>
+                            </div>
+                        `;
+                    }
+
+                    lastRecordDiv.innerHTML = recordHTML;
+                    exerciseView.appendChild(lastRecordDiv);
+                }
+
+                // Add input fields for tracking
+                for (let setNum = 1; setNum <= exercise.sets; setNum++) {
+                    const setFields = document.createElement('div');
+                    setFields.className = 'input-fields';
+
+                    if (exercise.singleArm) {
+                        setFields.innerHTML = `
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-weight">الوزن (كجم)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-weight" step="0.5" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-right-reps">التكرارات(يمين)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-right-reps" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-right-tank">العدات المتبقية (يمين)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-right-tank" min="0" max="10">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-left-reps">التكرارات(يسار)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-left-reps" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-left-tank">العدات المتبقية (يسار)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-left-tank" min="0" max="10">
+                            </div>
+                        `;
+                    } else {
+                        setFields.innerHTML = `
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-weight">الوزن (كجم)</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-weight" step="0.5" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-reps">التكرارات</label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-reps" min="0">
+                            </div>
+                            <div class="input-group">
+                                <label for="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-tank">العدات المتبقية </label>
+                                <input type="number" id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-set${setNum}-tank" min="0" max="10">
+                            </div>
+                        `;
+                    }
+
+                    exerciseView.appendChild(setFields);
+
+                    // Add separator between sets if not the last set
+                    if (setNum < exercise.sets) {
+                        const separator = document.createElement('div');
+                        separator.className = 'set-separator';
+                        exerciseView.appendChild(separator);
+                    }
+                }
+
+                // Add exercise notes textarea
+                const exerciseNotes = document.createElement('div');
+                exerciseNotes.className = 'exercise-notes';
+                exerciseNotes.innerHTML = `
+                    <h5>ملاحظات التمرين</h5>
+                    <textarea id="ex${currentWorkoutIndex}-day${day}-ex${exIndex}-notes" placeholder="أضف ملاحظات حول هذا التمرين..."></textarea>
+                `;
+
+                exerciseView.appendChild(exerciseNotes);
+
+                workoutViewContent.appendChild(exerciseView);
+            });
+
+            // Add action buttons for this day
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+            actionButtons.innerHTML = `
+                <button class="btn save-btn" id="save-day-btn" data-day="${day}">حفظ التسجيل</button>
+                <button class="btn reset-btn" id="reset-day-btn" data-day="${day}">إعادة تعيين الحقول</button>
+                <a href="#" class="back-btn" id="back-to-home-btn">← العودة للصفحة الرئيسية</a>
+            `;
+            workoutViewContent.appendChild(actionButtons);
+
+            // Add click handlers for exercise names
+            document.querySelectorAll('.exercise-name').forEach(exerciseName => {
+                exerciseName.addEventListener('click', function () {
+                    const exercise = this.getAttribute('data-exercise');
+                    showExerciseRecordsModal(currentWorkout.name, exercise, day);
+                });
+            });
+
+            // Add click handlers for day navigation
+            document.querySelectorAll('.day-nav-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const dayNum = parseInt(this.getAttribute('data-day'));
+                    currentViewingDay = dayNum;
+                    renderWorkoutDay(dayNum);
+                });
+            });
+
+            // Add click handlers for action buttons
+            document.getElementById('save-day-btn').addEventListener('click', function () {
+                const dayNum = parseInt(this.getAttribute('data-day'));
+                saveDayRecord(dayNum);
+            });
+
+            document.getElementById('reset-day-btn').addEventListener('click', function () {
+                const dayNum = parseInt(this.getAttribute('data-day'));
+                resetDayFields(dayNum);
+            });
+
+            document.getElementById('back-to-home-btn').addEventListener('click', showHomePage);
+        }
+
+        // Get last record for a specific exercise on a specific day
+        function getLastExerciseRecord(workoutName, exerciseName, day) {
+            if (!workoutRecords[workoutName] || workoutRecords[workoutName].length === 0) {
+                return null;
+            }
+
+            // Sort records by date (newest first)
+            const sortedRecords = workoutRecords[workoutName].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Find the first record that contains data for this exercise on this day
+            for (const record of sortedRecords) {
+                if (!record.data) continue;
+
+                // Check if any key in the data matches the exercise name pattern for this day
+                const exerciseKey = Object.keys(record.data).find(key =>
+                    (key.includes(exerciseName.toLowerCase().replace(/\s+/g, '-')) ||
+                        key.includes(`ex${currentWorkoutIndex}`)) &&
+                    key.includes(`day${day}`)
+                );
+
+                if (exerciseKey) {
+                    return record;
+                }
+            }
+
+            return null;
+        }
+
+        // Show exercise records modal
+        function showExerciseRecordsModal(workoutName, exerciseName, day) {
+            if (!workoutRecords[workoutName] || workoutRecords[workoutName].length === 0) {
+                showNotification('لا توجد سجلات لهذا التمرين', true);
+                return;
+            }
+
+            // Sort records by date (newest first)
+            const sortedRecords = workoutRecords[workoutName].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Filter records that have data for this exercise on this day
+            const exerciseRecords = sortedRecords.filter(record => {
+                if (!record.data) return false;
+
+                // Check if any key in the data matches the exercise name pattern for this day
+                return Object.keys(record.data).some(key =>
+                    (key.includes(exerciseName.toLowerCase().replace(/\s+/g, '-')) ||
+                        key.includes(`ex${currentWorkoutIndex}`)) &&
+                    key.includes(`day${day}`)
+                );
+            });
+
+            if (exerciseRecords.length === 0) {
+                showNotification('لا توجد سجلات لهذا التمرين', true);
+                return;
+            }
+
+            // Set modal title
+            exerciseRecordsTitle.textContent = `سجلات ${exerciseName} (اليوم ${day})`;
+
+            // Create table content
+            let tableHTML = `
+                <table class="exercise-records-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>بيانات المجموعات</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Add records to table
+            exerciseRecords.forEach(record => {
+                const date = new Date(record.date).toLocaleString('ar-SA');
+
+                // Get exercise data for this record
+                let setsData = '';
+                const exerciseData = Object.entries(record.data).filter(([key]) =>
+                    (key.includes(exerciseName.toLowerCase().replace(/\s+/g, '-')) ||
+                        key.includes(`ex${currentWorkoutIndex}`)) &&
+                    key.includes(`day${day}`)
+                );
+
+                // Group data by set
+                const sets = {};
+                exerciseData.forEach(([key, value]) => {
+                    const setMatch = key.match(/set(\d+)/);
+                    if (setMatch) {
+                        const setNum = setMatch[1];
+                        if (!sets[setNum]) sets[setNum] = {};
+
+                        if (key.includes('weight')) sets[setNum].weight = value;
+                        if (key.includes('reps') && !key.includes('right') && !key.includes('left')) sets[setNum].reps = value;
+                        if (key.includes('tank') && !key.includes('right') && !key.includes('left')) sets[setNum].tank = value;
+                        if (key.includes('right-reps')) sets[setNum].rightReps = value;
+                        if (key.includes('right-tank')) sets[setNum].rightTank = value;
+                        if (key.includes('left-reps')) sets[setNum].leftReps = value;
+                        if (key.includes('left-tank')) sets[setNum].leftTank = value;
+                    }
+                });
+
+                // Format sets data
+                setsData = Object.entries(sets).map(([setNum, setData]) => {
+                    if (setData.rightReps !== undefined) {
+                        // Single arm exercise
+                        return `
+                            <div><strong>المجموعة ${setNum}:</strong> 
+                            الوزن: ${setData.weight || '-'} | 
+                            اليمين: ${setData.rightReps || '-'} (${setData.rightTank || '-'}) | 
+                            اليسار: ${setData.leftReps || '-'} (${setData.leftTank || '-'})</div>
+                        `;
+                    } else {
+                        // Regular exercise
+                        return `
+                            <div><strong>المجموعة ${setNum}:</strong> 
+                            الوزن: ${setData.weight || '-'} | 
+                            التكرارات: ${setData.reps || '-'} | 
+                            العدات المتبقية : ${setData.tank || '-'}</div>
+                        `;
+                    }
+                }).join('');
+
+                // Get exercise notes
+                // const exerciseNotesKey = Object.keys(record.data).find(key) =>
+                //     key.includes('notes') &&
+                //     (key.includes(exerciseName.toLowerCase().replace(/\s+/g, '-')) ||
+                //         key.includes(`ex${currentWorkoutIndex}`) &&
+                //     key.includes(`day${day}`)
+                // );
+                   const exerciseNotesKey = Object.keys(record.data).find(key =>
+                    key.includes('notes') &&
+                    (key.includes(exerciseName.toLowerCase().replace(/\s+/g, '-')) ||
+                        key.includes(`ex${currentWorkoutIndex}`)) &&
+                    key.includes(`day${day}`)
+                );
+
+                const exerciseNotes = exerciseNotesKey ? record.data[exerciseNotesKey] : 'لا توجد ملاحظات';
+
+                tableHTML += `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${setsData}</td>
+                        <td>${exerciseNotes}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            exerciseRecordsBody.innerHTML = tableHTML;
+            openModal('exercise-records-modal');
+        }
+
+        // Save workout record for a specific day
+        function saveDayRecord(day) {
+            if (!currentWorkout) return;
+
+            const workoutName = currentWorkout.name;
+
+            // Collect all input data for this day
+            const inputs = document.querySelectorAll(`#workout-view-content input[type="number"][id^="ex${currentWorkoutIndex}-day${day}-"], 
+                                                    #workout-view-content textarea[id^="ex${currentWorkoutIndex}-day${day}-"]`);
+            const data = {};
+
+            inputs.forEach(input => {
+                if (input.value) {
+                    data[input.id] = input.value;
+                }
+            });
+
+            // Create record object
+            const record = {
+                date: new Date().toISOString(),
+                data,
+                day: day // Store which day this record is for
+            };
+
+            // Initialize workout records if not exists
+            if (!workoutRecords[workoutName]) {
+                workoutRecords[workoutName] = [];
+            }
+
+            // Add new record
+            workoutRecords[workoutName].push(record);
+
+            // Save to localStorage
+            localStorage.setItem('workoutRecords', JSON.stringify(workoutRecords));
+
+            showNotification(`تم حفظ سجل اليوم ${day} بنجاح!`);
+
+            // Reload the workout view to show the new record
+            renderWorkoutDay(day);
+        }
+
+        // Reset input fields for a specific day
+        function resetDayFields(day) {
+            const inputs = document.querySelectorAll(`#workout-view-content input[type="number"][id^="ex${currentWorkoutIndex}-day${day}-"], 
+                                                   #workout-view-content textarea[id^="ex${currentWorkoutIndex}-day${day}-"]`);
+            inputs.forEach(input => {
+                input.value = '';
+            });
+
+            showNotification(`تم إعادة تعيين حقول اليوم ${day}`);
+        }
+
+        // Show the workout view page
+        function showWorkoutViewPage() {
+            homePage.style.display = 'none';
+            workoutViewPage.style.display = 'block';
+        }
+
+        // Show the home page
+        function showHomePage() {
+            homePage.style.display = 'block';
+            workoutViewPage.style.display = 'none';
+            currentWorkout = null;
+            currentWorkoutIndex = -1;
+            currentViewingDay = 1;
+        }
+
+        // Handle add workout button click
+        function handleAddWorkout() {
+            // Check if serial is valid
+            if (!isSerialValid()) {
+                openModal('serial-expired-modal');
+                return;
+            }
+
+            // Proceed with workout creation
+            isEditing = false;
+            workoutNameInput.value = '';
+            workoutDaysSelect.value = '1';
+            openModal('workout-modal');
+            workoutNameInput.focus();
+        }
+
+        // Replace the existing verifySerialNumber function with this:
+        async function verifySerialNumber() {
+            const serial = serialNumberInput.value.trim();
+            loadingText.textContent = "جارٍ التحقق من السيريال...";
+            showLoading(true);
+
+            // Basic format validation
+            if (!serial || serial.length !== 26) {
+                showNotification('يجب أن يتكون رقم السيريال من 26 حرفًا', true);
+                showLoading(false);
+                return;
+            }
+
+            // Validate format (XXX-XXX-XXX-XXX-XXX-XXX-XX)
+            const serialPattern = /^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{2}$/;
+            if (!serialPattern.test(serial)) {
+                showNotification('تنسيق السيريال غير صالح. يجب أن يكون XXX-XXX-XXX-XXX-XXX-XXX-XX', true);
+                showLoading(false);
+                return;
+            }
+
+            try {
+                // Fetch serials from GitHub
+                const serials = await fetchSerialsFromGitHub();
+
+                // Find the serial in the list
+                const foundSerial = serials.find(s => s.serial === serial && s.programId === GITHUB_CONFIG.PROGRAM_ID);
+
+                if (!foundSerial) {
+                    showNotification('رقم سيريال غير صالح أو ليس لهذا البرنامج', true);
+                    showLoading(false);
+                    return;
+                }
+
+                if (foundSerial.used) {
+                    showNotification('تم استخدام هذا الرقم السيريال مسبقًا', true);
+                    showLoading(false);
+                    return;
+                }
+
+                // Generate device ID if not exists
+                let deviceId = localStorage.getItem('deviceId');
+                if (!deviceId) {
+                    deviceId = 'device-' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('deviceId', deviceId);
+                }
+
+                // Serial is valid - update it in GitHub
+                loadingText.textContent = "جارٍ تفعيل السيريال...";
+
+                // Mark as used with activation details
+                foundSerial.used = true;
+                foundSerial.usedDate = new Date().toISOString();
+                foundSerial.deviceId = deviceId;
+                foundSerial.activationDate = new Date().toISOString();
+
+                // Update the serials file in GitHub
+                await updateSerialsInGitHub(serials);
+
+                // Calculate expiry date based on duration
+                let expiryDate;
+                if (foundSerial.duration === 'permanent') {
+                    expiryDate = 'permanent';
+                } else {
+                    const days = parseInt(foundSerial.duration);
+                    expiryDate = new Date();
+                    expiryDate.setDate(expiryDate.getDate() + days);
+                }
+
+                // Save serial info locally
+                serialInfoData = {
+                    serial,
+                    programId: GITHUB_CONFIG.PROGRAM_ID,
+                    duration: foundSerial.duration,
+                    expiryDate: expiryDate === 'permanent' ? 'permanent' : expiryDate.toISOString(),
+                    activatedDate: new Date().toISOString(),
+                    deviceId: deviceId
+                };
+
+
+                localStorage.setItem('serialInfo', JSON.stringify(serialInfoData));
+
+                checkSerialAndEnforce(); // Add this line
+
+                // Close modal and show appropriate message
+                closeModal('serial-modal');
+                showLoading(false);
+
+                showNotification('تم تفعيل رقم السيريال بنجاح!');
+                checkSerialStatus();
+
+                // Enable workout creation
+                if (createdWorkouts.length === 0) {
+                    isEditing = false;
+                    workoutNameInput.value = '';
+                    workoutDaysSelect.value = '1';
+                    openModal('workout-modal');
+                    workoutNameInput.focus();
+                }
+            } catch (error) {
+                console.error('Error verifying serial:', error);
+                showNotification('فشل التحقق من السيريال. يرجى المحاولة مرة أخرى.', true);
+                showLoading(false);
+            }
+        }
+
+        // Fetch serials from GitHub
+        async function fetchSerialsFromGitHub() {
+            try {
+                const url = `https://api.github.com/repos/${GITHUB_CONFIG.REPO_OWNER}/${GITHUB_CONFIG.REPO_NAME}/contents/${GITHUB_CONFIG.SERIALS_FILE}?ref=${GITHUB_CONFIG.BRANCH}`;
+
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                return JSON.parse(content);
+            } catch (error) {
+                console.error('Error fetching serials:', error);
+                throw error;
+            }
+        }
+
+        // Update serials in GitHub
+        async function updateSerialsInGitHub(updatedSerials) {
+            try {
+                // First get the current file to get the SHA
+                const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.REPO_OWNER}/${GITHUB_CONFIG.REPO_NAME}/contents/${GITHUB_CONFIG.SERIALS_FILE}?ref=${GITHUB_CONFIG.BRANCH}`;
+
+                const getResponse = await fetch(getUrl, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!getResponse.ok) {
+                    throw new Error(`GitHub API error: ${getResponse.status}`);
+                }
+
+                const fileData = await getResponse.json();
+                const sha = fileData.sha;
+
+                // Now update the file
+                const updateUrl = `https://api.github.com/repos/${GITHUB_CONFIG.REPO_OWNER}/${GITHUB_CONFIG.REPO_NAME}/contents/${GITHUB_CONFIG.SERIALS_FILE}`;
+
+                const content = JSON.stringify(updatedSerials, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+                const updateResponse = await fetch(updateUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Update serials - mark serial as used`,
+                        content: encodedContent,
+                        sha: sha,
+                        branch: GITHUB_CONFIG.BRANCH
+                    })
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error(`GitHub API error: ${updateResponse.status}`);
+                }
+
+                return await updateResponse.json();
+            } catch (error) {
+                console.error('Error updating serials:', error);
+                throw error;
+            }
+        }
+
+        // Save expired serial number (same as verify but for expired case)
+        async function saveExpiredSerialNumber() {
+            const serial = expiredSerialNumberInput.value.trim();
+            loadingText.textContent = "جارٍ التحقق من السيريال الجديد...";
+            showLoading(true);
+
+            if (!serial) {
+                showNotification('الرجاء إدخال رقم سيريال', true);
+                showLoading(false);
+                return;
+            }
+
+            // Validate serial number format (new format with 7 parts)
+            const serialPattern = /^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{2}$/;
+            if (!serialPattern.test(serial)) {
+                showNotification('يجب أن يكون رقم السيريال بالتنسيق: xxx-xxx-xxx-xxx-xxx-xxx-xx', true);
+                showLoading(false);
+                return;
+            }
+
+            try {
+                // Fetch serials from GitHub
+                const serials = await fetchSerialsFromGitHub();
+
+                // Find the serial in the list
+                const foundSerial = serials.find(s => s.serial === serial && s.programId === GITHUB_CONFIG.PROGRAM_ID);
+
+                if (!foundSerial) {
+                    showNotification('رقم سيريال غير صالح أو ليس لهذا البرنامج', true);
+                    showLoading(false);
+                    return;
+                }
+
+                if (foundSerial.used) {
+                    showNotification('تم استخدام هذا الرقم السيريال مسبقًا', true);
+                    showLoading(false);
+                    return;
+                }
+
+                // Serial is valid - update it in GitHub
+                loadingText.textContent = "جارٍ تفعيل السيريال الجديد...";
+
+                // Mark as used
+                foundSerial.used = true;
+                foundSerial.usedDate = new Date().toISOString();
+
+                // Update the serials file in GitHub
+                await updateSerialsInGitHub(serials);
+
+                // Calculate expiry date based on duration code
+                const durationCode = foundSerial.durationCode;
+                let duration, expiryDate;
+
+                // Determine duration based on the duration code
+                switch (durationCode) {
+                    case '01': // 1 week
+                        duration = '7';
+                        break;
+                    case '02': // 1 month
+                        duration = '30';
+                        break;
+                    case '03': // 3 months
+                        duration = '90';
+                        break;
+                    case '04': // 6 months
+                        duration = '180';
+                        break;
+                    case '05': // 1 year
+                        duration = '365';
+                        break;
+                    case '99': // permanent
+                        duration = 'permanent';
+                        break;
+                    default:
+                        showNotification('كود المدة غير صالح في السيريال', true);
+                        showLoading(false);
+                        return;
+                }
+
+                // Calculate expiry date
+                if (duration === 'permanent') {
+                    expiryDate = 'permanent';
+                } else {
+                    const days = parseInt(duration);
+                    expiryDate = new Date();
+                    expiryDate.setDate(expiryDate.getDate() + days);
+                }
+
+                // Save serial info locally
+                serialInfoData = {
+                    serial,
+                    duration,
+                    expiryDate: duration === 'permanent' ? 'permanent' : expiryDate.toISOString(),
+                    activatedDate: new Date().toISOString()
+                };
+
+                localStorage.setItem('serialInfo', JSON.stringify(serialInfoData));
+                checkSerialAndEnforce();
+
+                closeModal('serial-expired-modal');
+                showLoading(false);
+                checkSerialStatus();
+                showNotification('تم تفعيل السيريال الجديد');
+            } catch (error) {
+                console.error('Error verifying serial:', error);
+                showNotification('فشل التحقق من السيريال. يرجى المحاولة مرة أخرى.', true);
+                showLoading(false);
+            }
+        }
+
+        // Save change serial number
+        async function saveChangeSerialNumber() {
+            const serial = changeSerialNumberInput.value.trim();
+            loadingText.textContent = "جارٍ التحقق من السيريال الجديد...";
+            showLoading(true);
+
+            if (!serial) {
+                showNotification('الرجاء إدخال رقم سيريال', true);
+                showLoading(false);
+                return;
+            }
+
+            // Validate serial number format (new format with 7 parts)
+            const serialPattern = /^[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{3}-[A-Za-z0-9]{2}$/;
+            if (!serialPattern.test(serial)) {
+                showNotification('يجب أن يكون رقم السيريال بالتنسيق: xxx-xxx-xxx-xxx-xxx-xxx-xx', true);
+                showLoading(false);
+                return;
+            }
+
+            try {
+                // Fetch serials from GitHub
+                const serials = await fetchSerialsFromGitHub();
+
+                // Find the serial in the list
+                const foundSerial = serials.find(s => s.serial === serial && s.programId === GITHUB_CONFIG.PROGRAM_ID);
+
+                if (!foundSerial) {
+                    showNotification('رقم سيريال غير صالح أو ليس لهذا البرنامج', true);
+                    showLoading(false);
+                    return;
+                }
+
+                if (foundSerial.used) {
+                    showNotification('تم استخدام هذا الرقم السيريال مسبقًا', true);
+                    showLoading(false);
+                    return;
+                }
+
+                // Serial is valid - update it in GitHub
+                loadingText.textContent = "جارٍ تفعيل السيريال الجديد...";
+
+                // Mark as used
+                foundSerial.used = true;
+                foundSerial.usedDate = new Date().toISOString();
+
+                // Update the serials file in GitHub
+                await updateSerialsInGitHub(serials);
+
+                // Calculate expiry date based on duration code
+                const durationCode = foundSerial.durationCode;
+                let duration, expiryDate;
+
+                // Determine duration based on the duration code
+                switch (durationCode) {
+                    case '01': // 1 week
+                        duration = '7';
+                        break;
+                    case '02': // 1 month
+                        duration = '30';
+                        break;
+                    case '03': // 3 months
+                        duration = '90';
+                        break;
+                    case '04': // 6 months
+                        duration = '180';
+                        break;
+                    case '05': // 1 year
+                        duration = '365';
+                        break;
+                    case '99': // permanent
+                        duration = 'permanent';
+                        break;
+                    default:
+                        showNotification('كود المدة غير صالح في السيريال', true);
+                        showLoading(false);
+                        return;
+                }
+
+                // Calculate expiry date
+                if (duration === 'permanent') {
+                    expiryDate = 'permanent';
+                } else {
+                    const days = parseInt(duration);
+                    expiryDate = new Date();
+                    expiryDate.setDate(expiryDate.getDate() + days);
+                }
+
+                // Save serial info locally
+                serialInfoData = {
+                    serial,
+                    duration,
+                    expiryDate: duration === 'permanent' ? 'permanent' : expiryDate.toISOString(),
+                    activatedDate: new Date().toISOString()
+                };
+
+                localStorage.setItem('serialInfo', JSON.stringify(serialInfoData));
+                checkSerialAndEnforce();
+
+                closeModal('change-serial-modal');
+                showLoading(false);
+                checkSerialStatus();
+                showNotification('تم تفعيل السيريال الجديد');
+            } catch (error) {
+                console.error('Error verifying serial:', error);
+                showNotification('فشل التحقق من السيريال. يرجى المحاولة مرة أخرى.', true);
+                showLoading(false);
+            }
+        }
+
+        // Show/hide loading overlay
+        function showLoading(show) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+        // Start workout creation
+        function startWorkoutCreation() {
+            const name = workoutNameInput.value.trim();
+            const days = parseInt(workoutDaysSelect.value);
+
+            if (!name) {
+                showNotification('الرجاء إدخال اسم التمرين', true);
+                return;
+            }
+
+            // Initialize workout data
+            workoutData = {
+                name,
+                days,
+                createdAt: new Date().toISOString()
+            };
+
+            // If editing, merge with existing data
+            if (isEditing) {
+                for (let day = 1; day <= currentWorkout.days; day++) {
+                    if (currentWorkout[`day${day}`]) {
+                        workoutData[`day${day}`] = currentWorkout[`day${day}`];
+                    }
+                }
+            }
+
+            currentDay = 1;
+            totalDays = days;
+
+            // Prepare for first day
+            prepareExerciseModal();
+            closeModal('workout-modal');
+            openModal('exercise-modal');
+        }
+
+        // Prepare exercise modal for the current day
+        function prepareExerciseModal() {
+            exerciseModalTitle.textContent = `إضافة تمارين لليوم ${currentDay}`;
+            exerciseCountSelect.value = '1';
+            exerciseFieldsContainer.innerHTML = '';
+
+            // If editing and day exists, pre-fill the data
+            if (isEditing && workoutData[`day${currentDay}`]) {
+                const dayData = workoutData[`day${currentDay}`];
+                dayNameInput.value = dayData.dayName;
+                exerciseCountSelect.value = dayData.exercises.length;
+
+                // Add fields with existing data
+                addExerciseFields(dayData.exercises.length);
+
+                // Pre-fill exercise data
+                dayData.exercises.forEach((exercise, index) => {
+                    document.getElementById(`exercise-name-${index + 1}`).value = exercise.name;
+                    document.getElementById(`exercise-sets-${index + 1}`).value = exercise.sets;
+                    document.getElementById(`single-arm-${index + 1}`).checked = exercise.singleArm;
+                });
+            } else {
+                dayNameInput.value = '';
+                exerciseCountSelect.value = '1';
+                addExerciseFields(1);
+            }
+        }
+
+        // Add exercise fields to the modal
+        function addExerciseFields(count) {
+            exerciseFieldsContainer.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                const exerciseGroup = document.createElement('div');
+                exerciseGroup.className = 'exercise-group';
+                exerciseGroup.innerHTML = `
+                    <div class="form-group">
+                        <label for="exercise-name-${i}">اسم التمرين ${i}</label>
+                        <input type="text" id="exercise-name-${i}" class="form-control" placeholder="مثال: ضغط البنش, قرفصاء, إلخ.">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exercise-sets-${i}">المجموعات</label>
+                            <select id="exercise-sets-${i}" class="form-control">
+                                <option value="1">مجموعة واحدة</option>
+                                <option value="2">مجموعتان</option>
+                                <option value="3">3 مجموعات</option>
+                                <option value="4">4 مجموعات</option>
+                                <option value="5">5 مجموعات</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="single-arm-option">
+                        <input type="checkbox" id="single-arm-${i}">
+                        <label for="single-arm-${i}">تمرين بذراع واحدة</label>
+                    </div>
+                `;
+
+                exerciseFieldsContainer.appendChild(exerciseGroup);
+            }
+        }
+
+        // Save exercises for the current day
+        function saveExercises() {
+            const dayName = dayNameInput.value.trim();
+            const exerciseCount = parseInt(exerciseCountSelect.value);
+
+            if (!dayName) {
+                showNotification('الرجاء إدخال اسم اليوم', true);
+                return;
+            }
+
+            const exercises = [];
+
+            for (let i = 1; i <= exerciseCount; i++) {
+                const name = document.getElementById(`exercise-name-${i}`).value.trim();
+                const sets = parseInt(document.getElementById(`exercise-sets-${i}`).value);
+                const singleArm = document.getElementById(`single-arm-${i}`).checked;
+
+                if (!name) {
+                    showNotification(`الرجاء إدخال اسم للتمرين ${i}`, true);
+                    return;
+                }
+
+                exercises.push({
+                    name,
+                    sets,
+                    singleArm
+                });
+            }
+
+            // Save day data
+            workoutData[`day${currentDay}`] = {
+                dayName,
+                exercises
+            };
+
+            // Move to next day or finish
+            if (currentDay < totalDays) {
+                currentDay++;
+                prepareExerciseModal();
+                showNotification(`تم حفظ اليوم ${currentDay - 1}. جارٍ إضافة تمارين لليوم ${currentDay}.`);
+            } else {
+                // Save the completed workout
+                if (isEditing) {
+                    // Replace the existing workout
+                    createdWorkouts[currentWorkoutIndex] = workoutData;
+                    showNotification('تم تحديث التمرين بنجاح!');
+                } else {
+                    // Add new workout
+                    createdWorkouts.push(workoutData);
+                    showNotification('تم إنشاء التمرين بنجاح!');
+                }
+
+                localStorage.setItem('customWorkouts', JSON.stringify(createdWorkouts));
+
+                closeModal('exercise-modal');
+                renderWorkoutList();
+
+                // Reset for next time
+                workoutData = {};
+                currentWorkout = null;
+                currentWorkoutIndex = -1;
+                currentDay = 1;
+                totalDays = 0;
+                isEditing = false;
+            }
+        }
+
+        // Open a modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // Close a modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Show notification
+        // function showNotification(message, isError = false) {
+        //     notification.textContent = message;
+        //     notification.className = 'notification show';
+        //     if (isError) notification.classList.add('error');
+
+        //     setTimeout(() {
+        //         notification.className = 'notification';
+        //     }, 3000);
+        // }
+         function showNotification(message, isError = false) {
+            notification.textContent = message;
+            notification.className = 'notification show';
+            if (isError) notification.classList.add('error');
+
+            setTimeout(() => {
+                notification.className = 'notification';
+            }, 3000);
+        }
+        // Get the help button element
+const helpBtn = document.getElementById('helpBtn');
+
+// Help page URL (replace with your actual help page URL)
+const HELP_PAGE_URL = "../../../Help Page/ar/index.html";
+
+// Add click event listener to the help button
+helpBtn.addEventListener('click', () => {
+    // Redirect to your help page
+    window.open(HELP_PAGE_URL, "_blank");
+});
+    </script>
+</body>
+
+</html>
